@@ -26,5 +26,5 @@ module.exports = (robot) ->
         if result
           [price, change, pctChange] = [result.l_cur, result.c, result.cp]
           pctChange = parseFloat pctChange
-          text = ["*#{price}*", "(#{change} #(pctChange})"]
+          text = ["*#{price}*", "(#{change} #{pctChange})"]
           msg.send text.join " "
