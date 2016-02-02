@@ -26,5 +26,16 @@ module.exports = (robot) ->
         if result
           [price, change, pctChange] = [result.l_cur, result.c, result.cp]
           pctChange = parseFloat pctChange
-          text = ["*#{price}*", "(#{change} #{pctChange})"]
+          if pctChange >= 0
+            pctChangeText = "+#{pctChange}"
+          else
+            pctChangeText = "#{pctChange}"
+          pctChangeText += "%"
+          text = ["*#{price}*", "(#{change} #{pctChangeText})"]
+          
+          if pctChange >= 0.5 then text.push ":chart_with_upwards_trend:"
+          if pctChange >= 2 then text.push ":fire:"
+          if pctChange <= -0.5 then text.push ":chart_with_downwards_trend:"
+          if pctChange <= -2 then text.push ":bomb:"
+
           msg.send text.join " "
