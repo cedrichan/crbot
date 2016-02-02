@@ -36,10 +36,10 @@ module.exports = (robot) ->
           
           if pctChange >= 0.5 then text.push ":chart_with_upwards_trend:"
           if pctChange >= 2 then text.push ":fire:"
-	  if pctChange >= 10 then text.push ":rocket:"
+          if pctChange >= 10 then text.push ":rocket:"
           if pctChange <= -0.5 then text.push ":chart_with_downwards_trend:"
           if pctChange <= -2 then text.push ":bomb:"
-	  if pctChange <= -10 then text.push ":poop:"
+          if pctChange <= -10 then text.push ":poop:"
 
           msg.send text.join " "
 
