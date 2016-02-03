@@ -145,7 +145,7 @@ module.exports = (robot) ->
                     fallback_text: text.join " "
                     color: "#aaaaaa"
                     #fields: fields
-                    text: ellipsize(company_description,200) + text.join " "
+                    text: ellipsize(company_description,200) + "\n" + text.join " "
                     mrkdwn_in: ["text"]
                 robot.emit "slack.attachment", payload
 
