@@ -41,7 +41,7 @@ module.exports = (robot) ->
 
     msg.http('https://finance.google.com/finance/info?client=ig&q=' + ticker)
       .get() (err, res, body) ->
-        msg.send "https://www.google.com/finance/getchart?q=#{ticker}&p=#{num}#{unit}&i=#{interval}"
+        #msg.send "https://www.google.com/finance/getchart?q=#{ticker}&p=#{num}#{unit}&i=#{interval}"
         result = JSON.parse(body.replace(/\/\/ /, ''))?[0]
         if result
           [price, change, pctChange] = [result.l_cur, result.c, result.cp]
@@ -60,28 +60,47 @@ module.exports = (robot) ->
           if pctChange <= -2 then text.push ":bomb:"
           if pctChange <= -10 then text.push ":poop:"
 
+          text.push "<https://www.google.com/finance?q="+ticker+"|Google Finance>"
+
           fields = []
           fields.push
-            title: 'title 1'
-            value: 'value 1'
+            title: null
+            value: text.join " "
+            short: false
+
+          fields.push
+            title: null
+            value: "https://www.google.com/finance/getchart?q=#{ticker}&p=#{num}#{unit}&i=#{interval}"
+
+          fields.push
+            title: "title 1"
+            value: "value 1"
             short: true
 
           fields.push
-            title: 'title 2',
-            value: 'value 2',
+            title: "title 2",
+            value: "value 2",
             short: false
 
-          text.push '<https://www.google.com/finance?q='+ticker+'|Google Finance>'
+          fields.push
+            title: "*markdown* ?",
+            value: "*how about here* ok short is false",
+            short: false
+
+          fields.push
+            title: "*markdown* ?",
+            value: "*how about here* ok short is true",
+            short: true
 
           payload =
             message: msg.message
             content:
-              text: text.join ' '
-              fallback_text: '<https://www.google.com/finance?q='+ticker
-              pretext: 'what is pretext'
-              color: '#888888'
+              text: text.join " "
+              fallback_text: "fallback <https://www.google.com/finance?q="+ticker
+              pretext: null
+              color: "#dd0000"
               fields: fields
-          robot.emit 'slack.attachment', payload
+          robot.emit "slack.attachment", payload
 
   robot.respond regex, responder
   robot.hear new RegExp('\\.' + regex.source, 'i'), responder
