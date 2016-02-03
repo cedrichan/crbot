@@ -60,6 +60,8 @@ module.exports = (robot) ->
           if pctChange <= -2 then text.push ":bomb:"
           if pctChange <= -10 then text.push ":poop:"
 
+          text.push '<https://www.google.com/finance?q='+ticker+'|Google Finance>'
+
           msg.send text.join " "
 
   robot.respond regex, responder
