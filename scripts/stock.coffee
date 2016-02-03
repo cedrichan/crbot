@@ -80,9 +80,9 @@ module.exports = (robot) ->
               image_url: chart_image
               fallback_text: text.join " "
               color: "#aaaaaa"
-              fields: fields
+              #fields: fields
               text: text.join " "
-              mrkdwn_in: ["fields"]
+              mrkdwn_in: ["text"]
           robot.emit "slack.attachment", payload
 
   robot.respond regex, responder
