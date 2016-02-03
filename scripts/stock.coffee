@@ -99,7 +99,7 @@ module.exports = (robot) ->
                 console.log first_price_line, last_price_line
                 console.log "Changing change from " + change + " to " + (end-start).toFixed(2)
                 console.log "Changing pctChange from " + pctChange + " to " + ((end-start) * 100/ start).toFixed(2)
-              change = end-start
+              change = (end-start).toFixed(2)
               pctChange = (change * 100 / start).toFixed(2)
 
             if pctChange >= 0
