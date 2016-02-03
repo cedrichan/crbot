@@ -5,6 +5,8 @@
   "author": "Cedric Han <cedrichan@gmail.com>",
   "description": "crbot is bot",
   "dependencies": {
+    "cheerio": "^0.20.0",
+    "ellipsize": "0.0.2",
     "hubot": "^2.17.0",
     "hubot-2048": "^1.0.1",
     "hubot-diagnostics": "0.0.1",

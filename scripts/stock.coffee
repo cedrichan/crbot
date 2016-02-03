@@ -18,6 +18,8 @@
 DEBUG = true
 
 moment = require("moment-timezone")
+cheerio = require("cheerio")
+ellipsize = require("ellipsize")
 
 parsePriceLine = (line_string,date_offset,interval) ->
   #line format: DATE,CLOSE,HIGH,LOW,OPEN,VOLUME
@@ -79,7 +81,7 @@ module.exports = (robot) ->
           [price, change, pctChange] = [result.l_cur, result.c, result.cp]
           pctChange = parseFloat pctChange
 
-        # Now fetch the historical price charts to get the percent change and change for the specified time interval
+        # Now fetch the historical price charts to get the percent change (and change) for the specified time interval
         ts = time_start.valueOf()
         prices_url = "https://www.google.com/finance/getprices?q=#{ticker}&i=#{interval_for_prices}&p=#{num}#{unit}&f=d,c,v,o,h,l&df=cpct&auto=1&ts=#{ts}"
         if DEBUG
@@ -102,43 +104,51 @@ module.exports = (robot) ->
               change = (end-start).toFixed(2)
               pctChange = (change * 100 / start).toFixed(2)
 
-            if pctChange >= 0
-              pctChangeText = "+#{pctChange}"
-            else
-              pctChangeText = "#{pctChange}"
-            pctChangeText += "%"
-            text = ["*#{price}*", "(#{change} #{pctChangeText})"]
+            # Fetch company name and description
+            msg.http("https://www.google.com/finance?q="+ticker)
+              .get() (err, res, body) ->
+                $ = cheerio.load(body)
+                company_name = $("#sharebox-data meta[itemprop=name]").attr("content") || 'No company name'
+                company_description = $(".companySummary").text().trim() || 'No description'
 
-            if pctChange >= 0.5 then text.push ":chart_with_upwards_trend:"
-            if pctChange >= 2 then text.push ":fire:"
-            if pctChange >= 10 then text.push ":rocket:"
-            if pctChange <= -0.5 then text.push ":chart_with_downwards_trend:"
-            if pctChange <= -2 then text.push ":bomb:"
-            if pctChange <= -10 then text.push ":poop:"
+                if pctChange >= 0
+                  pctChangeText = "+#{pctChange}"
+                else
+                  pctChangeText = "#{pctChange}"
+                pctChangeText += "%"
+                text = ["*#{price}*", "(#{change} #{pctChangeText})"]
 
-            fields = []
-            fields.push
-              title: "Change"
-              value: "#{change} (#{pctChangeText})"
-              short: true
+                if pctChange >= 0.5 then text.push ":chart_with_upwards_trend:"
+                if pctChange >= 2 then text.push ":fire:"
+                if pctChange >= 10 then text.push ":rocket:"
+                if pctChange <= -0.5 then text.push ":chart_with_downwards_trend:"
+                if pctChange <= -2 then text.push ":bomb:"
+                if pctChange <= -10 then text.push ":poop:"
 
-            fields.push
-              title: "Price"
-              value: "#{price}"
-              short: true
+                fields = []
+                fields.push
+                  title: "Change"
+                  value: "#{change} (#{pctChangeText})"
+                  short: true
 
-            payload =
-              message: msg.message
-              content:
-                title: "Google Finance"
-                title_link: "https://www.google.com/finance?q="+ticker
-                image_url: chart_image
-                fallback_text: text.join " "
-                color: "#aaaaaa"
-                #fields: fields
-                text: text.join " "
-                mrkdwn_in: ["text"]
-            robot.emit "slack.attachment", payload
+                fields.push
+                  title: "Price"
+                  value: "#{price}"
+                  short: true
+
+                payload =
+                  message: msg.message
+                  content:
+                    title: company_name
+                    title_link: "https://www.google.com/finance?q="+ticker
+                    image_url: chart_image
+                    fallback_text: text.join " "
+                    color: "#aaaaaa"
+                    #fields: fields
+                    text: ellipsize(company_description,200) + text.join " "
+                    mrkdwn_in: ["text"]
+                robot.emit "slack.attachment", payload
+
 
   robot.respond regex, responder
   robot.hear new RegExp('\\.' + regex.source, 'i'), responder
