@@ -42,7 +42,7 @@ module.exports = (robot) ->
     msg.http('https://finance.google.com/finance/info?client=ig&q=' + ticker)
       .get() (err, res, body) ->
         chart_image = "https://www.google.com/finance/getchart?q=#{ticker}&p=#{num}#{unit}&i=#{interval}"
-        msg.send chart_image
+        #msg.send chart_image
         result = JSON.parse(body.replace(/\/\/ /, ''))?[0]
         if result
           [price, change, pctChange] = [result.l_cur, result.c, result.cp]
@@ -61,8 +61,6 @@ module.exports = (robot) ->
           if pctChange <= -2 then text.push ":bomb:"
           if pctChange <= -10 then text.push ":poop:"
 
-          google_finance_link = "<https://www.google.com/finance?q="+ticker+"|Google Finance>"
-
           fields = []
           fields.push
             title: "Change"
@@ -78,13 +76,13 @@ module.exports = (robot) ->
             message: msg.message
             content:
               title: "Google Finance"
-              title_link: google_finance_link
-              text: text.join " "
+              title_link: "https://www.google.com/finance?q="+ticker
               image_url: chart_image
               fallback_text: text.join " "
-              pretext: text.join " "
               color: "#aaaaaa"
               fields: fields
+              text: text.join " "
+              mrkdwn_in: ["fields"]
           robot.emit "slack.attachment", payload
 
   robot.respond regex, responder
