@@ -41,7 +41,8 @@ module.exports = (robot) ->
 
     msg.http('https://finance.google.com/finance/info?client=ig&q=' + ticker)
       .get() (err, res, body) ->
-        #msg.send "https://www.google.com/finance/getchart?q=#{ticker}&p=#{num}#{unit}&i=#{interval}"
+        chart_image = "https://www.google.com/finance/getchart?q=#{ticker}&p=#{num}#{unit}&i=#{interval}"
+        msg.send chart_image
         result = JSON.parse(body.replace(/\/\/ /, ''))?[0]
         if result
           [price, change, pctChange] = [result.l_cur, result.c, result.cp]
@@ -52,7 +53,7 @@ module.exports = (robot) ->
             pctChangeText = "#{pctChange}"
           pctChangeText += "%"
           text = ["*#{price}*", "(#{change} #{pctChangeText})"]
-          
+
           if pctChange >= 0.5 then text.push ":chart_with_upwards_trend:"
           if pctChange >= 2 then text.push ":fire:"
           if pctChange >= 10 then text.push ":rocket:"
@@ -60,45 +61,29 @@ module.exports = (robot) ->
           if pctChange <= -2 then text.push ":bomb:"
           if pctChange <= -10 then text.push ":poop:"
 
-          text.push "<https://www.google.com/finance?q="+ticker+"|Google Finance>"
+          google_finance_link = "<https://www.google.com/finance?q="+ticker+"|Google Finance>"
 
           fields = []
           fields.push
-            title: null
-            value: text.join " "
-            short: false
-
-          fields.push
-            title: null
-            value: "https://www.google.com/finance/getchart?q=#{ticker}&p=#{num}#{unit}&i=#{interval}"
-
-          fields.push
-            title: "title 1"
-            value: "value 1"
+            title: "Change"
+            value: "#{change} (#{pctChangeText})"
             short: true
 
           fields.push
-            title: "title 2",
-            value: "value 2",
-            short: false
-
-          fields.push
-            title: "*markdown* ?",
-            value: "*how about here* ok short is false",
-            short: false
-
-          fields.push
-            title: "*markdown* ?",
-            value: "*how about here* ok short is true",
+            title: "Price"
+            value: "#{price}"
             short: true
 
           payload =
             message: msg.message
             content:
+              title: "Google Finance"
+              title_link: google_finance_link
               text: text.join " "
-              fallback_text: "fallback <https://www.google.com/finance?q="+ticker
-              pretext: null
-              color: "#dd0000"
+              image_url: chart_image
+              fallback_text: text.join " "
+              pretext: text.join " "
+              color: "#aaaaaa"
               fields: fields
           robot.emit "slack.attachment", payload
 
