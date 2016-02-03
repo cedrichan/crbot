@@ -18,7 +18,7 @@
 module.exports = (robot) ->
   regex = /stock (?:info|price|quote)?\s?(?:for|me)?\s?@?([A-Za-z0-9.-_]+)\s?((\d+)([dmy]))?/i
   responder = (msg) ->
-    ticker = escape(msg.match[1])
+    ticker = escape(msg.match[1]).toUpperCase()
 
     # Parse out the chart duration.
     num = msg.match[3] * 1 || 1
