@@ -60,8 +60,14 @@ module.exports = (robot) ->
           if pctChange <= -2 then text.push ":bomb:"
           if pctChange <= -10 then text.push ":poop:"
 
-          robot.emit 'slack.attachment', {text: '<https://www.google.com/finance?q='+ticker+'|Google Finance>'}
           msg.send text.join " "
+          payload =
+            message: msg.message
+            content:
+              text: '<https://www.google.com/finance?q='+ticker+'|Google Finance>'
+              fallback_text: '<https://www.google.com/finance?q='+ticker
+              color: '#888888'
+          robot.emit 'slack.attachment', payload
 
   robot.respond regex, responder
   robot.hear new RegExp('\\.' + regex.source, 'i'), responder
