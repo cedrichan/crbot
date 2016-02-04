@@ -118,12 +118,21 @@ module.exports = (robot) ->
                 pctChangeText += "%"
                 text = ["*#{price}*", "(#{change} #{pctChangeText})"]
 
-                if pctChange >= 0.5 then text.push ":chart_with_upwards_trend:"
-                if pctChange >= 2 then text.push ":fire:"
-                if pctChange >= 10 then text.push ":rocket:"
-                if pctChange <= -0.5 then text.push ":chart_with_downwards_trend:"
-                if pctChange <= -2 then text.push ":bomb:"
-                if pctChange <= -10 then text.push ":poop:"
+                color = "#AAAAAA" #gray
+                if pctChange >= 0.5
+                  text.push ":chart_with_upwards_trend:"
+                if pctChange >= 2
+                  color = "#2FA44F" #green
+                  text.push ":fire:"
+                if pctChange >= 10
+                   text.push ":rocket:"
+                if pctChange <= -0.5
+                   text.push ":chart_with_downwards_trend:"
+                if pctChange <= -2
+                  text.push ":bomb:"
+                  color = "#D50200" #red
+                if pctChange <= -10
+                  text.push ":poop:"
 
                 fields = []
                 fields.push
@@ -143,7 +152,7 @@ module.exports = (robot) ->
                     title_link: "https://www.google.com/finance?q="+ticker
                     image_url: chart_image
                     fallback_text: text.join " "
-                    color: "#aaaaaa"
+                    color: color
                     #fields: fields
                     text: ellipsize(company_description,200) + "\n" + text.join " "
                     mrkdwn_in: ["text"]
