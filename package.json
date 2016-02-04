@@ -9,6 +9,7 @@
     "ellipsize": "0.0.2",
     "hubot": "^2.17.0",
     "hubot-2048": "^1.0.1",
+    "hubot-awyisser": "^1.0.2",
     "hubot-diagnostics": "0.0.1",
     "hubot-google-images": "^0.2.6",
     "hubot-google-translate": "^0.2.0",
