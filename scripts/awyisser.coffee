@@ -9,8 +9,10 @@
 #   hubot awyiss motha fuckin <phrase>: generate awyisser image for <phrase>
 
 module.exports = (robot) ->
-  robot.respond /(aw *yiss)( motha fuckin)? (.*)/i, (msg) ->
+  robot.respond /(aw *yiss)( motha fuckin)? (.+)/i, (msg) ->
     awyisser msg, msg.match[3]
+  robot.hear /\.(?:aw)?yiss (.+)/i, (msg) ->
+    awyisser msg, msg.match[1]
 
 awyisser = (msg, phrase) ->
   if phrase.length > 40
@@ -28,4 +30,4 @@ awyisser = (msg, phrase) ->
         when 200
           msg.send JSON.parse(body).link
         else
-          msg.send "aw nooo... couldn't connect to awyisser"
+          msg.send "aw nooo... couldn't connect to awyisser (#{res.statusCode})"
