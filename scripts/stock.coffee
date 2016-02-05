@@ -133,6 +133,8 @@ module.exports = (robot) ->
                   color = "#D50200" #red
                 if pctChange <= -10
                   text.push ":poop:"
+                if pctChange <= -50
+                  text.push ":skull:"
 
                 fields = []
                 fields.push
