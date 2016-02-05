@@ -8,6 +8,5 @@
   "hubot-plusplus",
   "hubot-maps",
   "hubot-redis-brain",
-  "hubot-shipit",
-  "hubot-awyisser"
+  "hubot-shipit"
 ]
