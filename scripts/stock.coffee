@@ -38,7 +38,9 @@ parsePriceLine = (line_string,date_offset,interval) ->
   return ret
 
 module.exports = (robot) ->
-  regex = /stock (?:info|price|quote)?\s?(?:for|me)?\s?@?([A-Za-z0-9.-_]+)\s?((\d+)([dmy]))?/i
+  stock_regex = /stock (?:info|price|quote)?\s?(?:for|me)?\s?@?([a-z][a-z0-9\.]*)\s?((\d+)([dmy]))?/i
+  ticker_regex = /\$([a-z][a-z0-9\.]*)\s*((\d+)([dmy]))?/i
+
   responder = (msg) ->
     ticker = escape(msg.match[1]).toUpperCase()
 
@@ -161,5 +163,6 @@ module.exports = (robot) ->
                 robot.emit "slack.attachment", payload
 
 
-  robot.respond regex, responder
-  robot.hear new RegExp('\\.' + regex.source, 'i'), responder
+  robot.respond stock_regex, responder
+  robot.hear new RegExp('\\.' + stock_regex.source, 'i'), responder
+  robot.hear ticker_regex, responder
