@@ -33,6 +33,17 @@ Then you can interact with crbot by typing `crbot help`.
     crbot animate me <query> - The same thing as `image me`, except adds [snip]
     crbot help - Displays all of the help commands that crbot knows about.
     ...
+    
+#### Running crbot in docker
+
+Using Debian Jessie as a base, crbot in a docker container. 
+
+* Install docker. Recommended method is via homebrew (on mac) and the installer (on linux).
+* Build the image
+    docker build -t crbot .
+* Run the image
+    docker run -t crbot
+
 
 ### Configuration
 
