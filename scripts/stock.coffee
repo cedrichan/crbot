@@ -12,7 +12,7 @@
 #
 # Author:
 #   eliperkins
-#   maddox   
+#   maddox
 #   johnwyles
 
 DEBUG = true
@@ -160,7 +160,7 @@ module.exports = (robot) ->
                     #fields: fields
                     text: ellipsize(company_description,200) + "\n" + text.join " "
                     mrkdwn_in: ["text"]
-                robot.emit "slack.attachment", payload
+                msg.send {attachments: [payload.content]}
 
 
   robot.respond stock_regex, responder
