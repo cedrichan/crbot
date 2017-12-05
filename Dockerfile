@@ -1,7 +1,4 @@
-FROM alpine:3.7
-
-RUN apk update
-RUN apk add nodejs
+FROM node:8.9.1-8.9.1-alpine
 
 ## install crbot code
 RUN adduser -D crbot
@@ -16,4 +13,3 @@ RUN npm install
 
 COPY bin bin
 COPY scripts scripts
-
