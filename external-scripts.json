@@ -1,11 +1,9 @@
 [
-  "hubot-2048",
   "hubot-diagnostics",
   "hubot-help",
   "hubot-humanity",
   "hubot-google-translate",
   "hubot-plusplus",
   "hubot-maps",
-  "hubot-redis-brain",
   "hubot-shipit"
 ]
